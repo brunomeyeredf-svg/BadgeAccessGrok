@@ -1,0 +1,112 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+header p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+section {
+    margin: 1.5rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status {
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.status span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.action, .simulation {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #1976D2;
+}
+
+.btn-secondary {
+    background-color: #4CAF50;
+}
+
+.btn-secondary:hover {
+    background-color: #388E3C;
+}
+
+.info, .history {
+    font-size: 0.95rem;
+}
+
+.info h2, .history h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+#badge-info p, #history p {
+    margin: 0.5rem 0;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+@media (min-width: 600px) {
+    .action, .simulation {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .btn {
+        width: auto;
+    }
+}

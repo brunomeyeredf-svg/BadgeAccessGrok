@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2196F3">
+    <title>📱 Lecteur Badges RFID</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDgiIGZpbGw9IiMyMTk2RjMiLz4KPHBhdGggZD0iTTQ4IDQ4SDE0NFYxNDRINDhWNDhaIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjgiIGZpbGw9Im5vbmUiLz4KPHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TkZDPC90ZXh0Pgo8L3N2Zz4K">
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>📱 Lecteur Badges RFID</h1>
+        <p>WebNFC - Version Progressive Web App</p>
+    </header>
+
+    <section id="nfc-status" class="status">
+        <span>📶</span>
+        <p>Vérification WebNFC...</p>
+        <p>Initialisation en cours</p>
+    </section>
+
+    <section class="action">
+        <button id="scan-button" class="btn">🔍 Scanner un badge</button>
+    </section>
+
+    <section class="simulation">
+        <button id="record-mode" class="btn btn-secondary">📝 Simuler Enregistreur</button>
+        <button id="verify-mode" class="btn btn-secondary">✅ Simuler Vérificateur</button>
+    </section>
+
+    <section class="info">
+        <h2>📊 Informations du badge</h2>
+        <div id="badge-info">
+            <p>Aucun badge scanné</p>
+        </div>
+    </section>
+
+    <section class="history">
+        <h2>📋 Historique (derniers 5)</h2>
+        <div id="history">
+            <p>Aucun historique disponible</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>Compatible : Android Chrome 89+ avec NFC activé</p>
+        <p>Progressive Web App - Peut être installée sur l'écran d'accueil</p>
+        <p>Version 1.0 - Badges RFID 13.56MHz</p>
+    </footer>
+
+    <script src="./main.js"></script>
+    <script>
+        // Enregistrement du Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré avec succès:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de l\'enregistrement du Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
