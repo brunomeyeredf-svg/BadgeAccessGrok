@@ -62,7 +62,9 @@
     </section>
 
     <section class="action">
+        <!-- Bouton pour scanner un badge -->
         <button id="scan-button" class="btn">🔍 Scanner un badge</button>
+        <!-- Bouton pour réinitialiser la base de données -->
         <button id="reset-db" class="btn btn-reset">🗑️ Réinitialiser la base</button>
     </section>
 
@@ -99,6 +101,8 @@
                 navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('Service Worker enregistré avec succès:', registration.scope);
+                        // Forcer la mise à jour du Service Worker
+                        registration.update();
                     })
                     .catch(error => {
                         console.error('Erreur lors de l\'enregistrement du Service Worker:', error);

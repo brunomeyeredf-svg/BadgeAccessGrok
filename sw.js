@@ -1,5 +1,5 @@
 // sw.js - Service Worker pour la PWA Lecteur Badges RFID (Version améliorée)
-const CACHE_NAME = 'nfc-badge-reader-v1.0.2'; // Mise à jour de la version pour forcer le rafraîchissement
+const CACHE_NAME = 'nfc-badge-reader-v1.0.3'; // Mise à jour pour forcer le rafraîchissement
 const urlsToCache = [
     './',
     './index.html',
@@ -7,7 +7,6 @@ const urlsToCache = [
     './main.js',
     './manifest.json',
     'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'
-    // Ajout d'autres ressources si nécessaire, ex: './icon-192.png' pour les icônes
 ];
 
 const DB_NAME = 'badge-reader-db';
@@ -101,7 +100,6 @@ self.addEventListener('fetch', (event) => {
                         .catch((error) => {
                             console.error('Service Worker: Erreur fetch:', error);
                             if (event.request.destination === 'document') {
-                                // Page hors-ligne améliorée avec lien vers la police pour cohérence
                                 return new Response(
                                     `<!DOCTYPE html>
                                     <html>
@@ -151,9 +149,8 @@ self.addEventListener('fetch', (event) => {
                                     }
                                 );
                             }
-                            // Fallback pour les images : retourner une image placeholder si disponible
                             if (event.request.destination === 'image') {
-                                return caches.match('/placeholder-image.png'); // Ajoute une image placeholder au cache si nécessaire
+                                return caches.match('/placeholder-image.png');
                             }
                             return new Response('Ressource indisponible hors ligne', { status: 503 });
                         });
@@ -215,7 +212,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('sync', (event) => {
     console.log('Service Worker: Événement de synchronisation:', event.tag);
     if (event.tag === 'badge-sync') {
-        event.waitUntil(syncBadgeData(1)); // Commence avec tentative 1
+        event.waitUntil(syncBadgeData(1));
     }
 });
 
@@ -237,8 +234,6 @@ async function syncBadgeData(attempt = 1) {
             return;
         }
 
-        // Batching : Envoyer tous les badges en une seule requête si possible
-        // (Assumes que l'endpoint /api/badges/sync accepte un array)
         const response = await fetch('/api/badges/sync', {
             method: 'POST',
             headers: {
@@ -264,7 +259,6 @@ async function syncBadgeData(attempt = 1) {
             throw new Error('Échec après max retries');
         }
 
-        // Notifier les clients
         self.clients.matchAll().then(clients => {
             clients.forEach(client => {
                 client.postMessage({
@@ -280,12 +274,12 @@ async function syncBadgeData(attempt = 1) {
             await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
             return syncBadgeData(attempt + 1);
         } else {
-            throw error; // Relancer pour que le sync soit reprogrammé ultérieurement
+            throw error;
         }
     }
 }
 
-// Gestion des notifications push (inchangée, mais avec logs améliorés)
+// Gestion des notifications push
 self.addEventListener('push', (event) => {
     console.log('Service Worker: Notification push reçue');
     const options = {
@@ -308,7 +302,7 @@ self.addEventListener('push', (event) => {
     );
 });
 
-// Gestion des clics sur les notifications (inchangée)
+// Gestion des clics sur les notifications
 self.addEventListener('notificationclick', (event) => {
     console.log('Service Worker: Clic sur notification:', event.action);
     event.notification.close();
@@ -329,7 +323,7 @@ self.addEventListener('notificationclick', (event) => {
     }
 });
 
-// Messages depuis l'application principale (inchangée)
+// Messages depuis l'application principale
 self.addEventListener('message', (event) => {
     console.log('Service Worker: Message reçu:', event.data);
     if (event.data && event.data.type === 'SKIP_WAITING') {
