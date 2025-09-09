@@ -32,6 +32,21 @@ async function checkWebNFC() {
     }
 }
 
+// Vérifier si un badge existe déjà par UID
+async function badgeExists(uid) {
+    const db = await initDB();
+    return new Promise((resolve) => {
+        const transaction = db.transaction(STORE_NAME, 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
+        request.onsuccess = () => {
+            const badges = request.result;
+            resolve(badges.some(badge => badge.uid === uid));
+        };
+        request.onerror = () => resolve(false);
+    });
+}
+
 // Scanner un badge NFC
 async function scanNFC() {
     try {
@@ -44,6 +59,12 @@ async function scanNFC() {
             // Vérifier si le badge a été lu récemment
             if (lastScannedBadge === serialNumber && (currentTime - lastScanTime) < DEBOUNCE_DELAY) {
                 document.getElementById('nfc-status').innerHTML = '<span>⚠️</span><p>Badge déjà scanné récemment, veuillez attendre.</p>';
+                return;
+            }
+
+            // Vérifier si le badge existe déjà dans la base
+            if (await badgeExists(serialNumber)) {
+                document.getElementById('nfc-status').innerHTML = '<span>⚠️</span><p>Badge déjà enregistré dans la base.</p>';
                 return;
             }
 
@@ -89,6 +110,25 @@ async function saveBadge(badge) {
         store.add(badge);
         transaction.oncomplete = () => resolve();
     });
+}
+
+// Réinitialiser la base de données
+async function resetDatabase() {
+    if (!confirm('Voulez-vous vraiment réinitialiser la base de données ? Tous les badges seront supprimés.')) {
+        return;
+    }
+    try {
+        const db = await initDB();
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        store.clear();
+        transaction.oncomplete = () => {
+            document.getElementById('nfc-status').innerHTML = '<span>✅</span><p>Base de données réinitialisée.</p>';
+            updateHistory();
+        };
+    } catch (error) {
+        document.getElementById('nfc-status').innerHTML = `<span>❌</span><p>Erreur lors de la réinitialisation : ${error}</p>`;
+    }
 }
 
 // Afficher les informations du badge
@@ -162,6 +202,11 @@ document.getElementById('verify-mode').addEventListener('click', () => {
 // Gestion du bouton de scan
 document.getElementById('scan-button').addEventListener('click', () => {
     scanNFC();
+});
+
+// Gestion du bouton de réinitialisation
+document.getElementById('reset-db').addEventListener('click', () => {
+    resetDatabase();
 });
 
 // Initialisation
