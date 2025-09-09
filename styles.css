@@ -80,6 +80,14 @@ section {
     background-color: #388E3C;
 }
 
+.btn-reset {
+    background-color: #F44336;
+}
+
+.btn-reset:hover {
+    background-color: #D32F2F;
+}
+
 .info, .history {
     font-size: 0.95rem;
 }
